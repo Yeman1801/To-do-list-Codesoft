@@ -9,9 +9,23 @@ tk1.geometry("760x510")
 style = ttk.Style()
 style.theme_use("clam")
 
-style.configure("Treeview", font=("Segoe UI", 10, "bold"), background="white", foreground="#2c3e50",
-                rowheight=30, fieldbackground="white")
-style.configure("Treeview.Heading",background="#2563eb",foreground="black",font=("Segoe UI", 11, "bold"))
+style.configure("Treeview", font=("Segoe UI", 10, "bold"), rowheight=30)
+style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
+
+def taskadd():
+    t = e1.get().strip().capitalize()
+    s, e = e2.get(), e3.get()
+    if not all((t, s, e)):
+        return messagebox.showwarning("Missing data", "All fields is required")
+    d = time(s, e)
+    if not d:
+        return messagebox.showerror("Time error", "24 hours Invalid time")
+    tt2.insert("", tk.END, values=(t, s, e, d))
+    e1.delete(0, tk.END)
+    e2.delete(0, tk.END)
+    e3.delete(0, tk.END)
+
+
 
 def time(t1, t2):
     s = datetime.strptime(t1, "%H:%M")
@@ -21,36 +35,28 @@ def time(t1, t2):
     return str(e - s)
 
 
-def add():
-    t, s, e = e1.get().strip().capitalize(), e2.get(), e3.get()
-    if not t or not s or not e:
-        return messagebox.showwarning("Warning", "All fields are required")
-    d = time(s, e)
-    if not d:
-        return messagebox.showerror("Error", "Invalid time")
-    tt2.insert("", tk.END, values=(t, s, e, d))
-    e1.delete(0, tk.END)
-    e2.delete(0, tk.END)
-    e3.delete(0, tk.END)
-
-def delete():
+def taskdelete():
     sel = tt2.selection()
     if not sel:
-        messagebox.showwarning("Warning", "Select task then delete")
+        messagebox.showwarning("Not Selection", "Select task then delete")
         return
     for i in sel:
         tt2.delete(i)
 
 
 def colon(event, box):
-    v = ''.join(c for c in box.get() if c.isdigit())
+    v = ""
+    for c in box.get():
+        if c.isdigit():
+            v += c
     if len(v) > 2:
-        v = v[:2] + ':' + v[2:4]
+        v = v[:2] + ":" + v[2:4]
     box.delete(0, tk.END)
     box.insert(0, v)
 
 
-t1 = tk.Label(tk1, text="To-Do List with Time Tracker", bg="#d8ebfd", fg="#2c3e50", font=("Segoe UI", 20, "bold"))
+
+t1 = tk.Label(tk1, text="To-Do-list with Time traker", bg="#d8ebfd", font=("Segoe UI", 20, "bold"))
 t1.pack()
 
 l1 = tk.Label(tk1, text="Task-Name", font=("Arial", 14, "bold"))
@@ -75,10 +81,10 @@ e3.place(x=520, y=100, height=30)
 e3.bind("<KeyRelease>", lambda e: colon(e, e3))
 
 
-b1 = tk.Button(tk1, text="Add Task", command=add, font=("Arial", 12, "bold"))
+b1 = tk.Button(tk1, text="Add Task", command=taskadd, font=("Arial", 12, "bold"))
 b1.place(x=200, y=150)
 
-b2 = tk.Button(tk1, text="Delete Task", command=delete, font=("Arial", 12, "bold"))
+b2 = tk.Button(tk1, text="Delete Task", command=taskdelete, font=("Arial", 12, "bold"))
 b2.place(x=400, y=150)
 
 
