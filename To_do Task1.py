@@ -54,7 +54,9 @@ def colon(event, box):
     box.delete(0, tk.END)
     box.insert(0, v)
 
-button = {"font": ("bold", 13), "bd": 4, "relief": "solid"}
+def onkey(event):
+    colon(event, event.widget)
+
 
 t1 = tk.Label(tk1, text="To-Do-list with Time traker", bg="#d8ebfd", font=("Segoe UI", 20, "bold"))
 t1.pack()
@@ -73,12 +75,13 @@ e1.place(x=40, y=100, height=30)
 
 e2 = tk.Entry(tk1, **enter)
 e2.place(x=280, y=100, height=30)
-e2.bind("<KeyRelease>", lambda e: colon(e, e2))
+e2.bind("<KeyRelease>", onkey)
 
 e3 = tk.Entry(tk1, **enter)
 e3.place(x=520, y=100, height=30)
-e3.bind("<KeyRelease>", lambda e: colon(e, e3))
+e3.bind("<KeyRelease>", onkey)
 
+button = {"font": ("bold", 13), "bd": 4, "relief": "solid"}
 
 b1 = tk.Button(tk1, text="Add Task", command=taskadd, **button)
 b1.place(x=200, y=140)
